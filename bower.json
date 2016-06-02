@@ -4,6 +4,9 @@
   "authors": [
     "Florent Gouget <florent.gouget@gmail.com>"
   ],
+  "main": [
+    "src/app.js"
+  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -12,7 +15,6 @@
     "test",
     "tests"
   ],
-  "dependencies":{
-    "lodash": "^3.10.1"
+  "dependencies": {
   }
 }
