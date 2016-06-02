@@ -1,7 +1,8 @@
 angular.module('test', [ 'http-retryer' ])
-  .config([ '$httpProvider',
-    function ($httpProvider, HttpErrorInterceptor) {
-      $httpProvider.interceptors.push('HttpErrorInterceptor')
+  .config([ '$httpProvider', 'HttpRetryerProvider',
+    function ($httpProvider, HttpRetryerProvider) {
+      HttpRetryerProvider.setMaxRetries(10)
+      $httpProvider.interceptors.push('HttpRetryer')
     } ])
 
 describe('Http Retryer', function () {
@@ -27,34 +28,62 @@ describe('Http Retryer', function () {
   })
 
   it('should make a simple query', function () {
-    $http.get('http://MOCKURL.com/model1')
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond()
+    $http.get('http://MOCKURL.com/')
+    httpBackend.expectGET('http://MOCKURL.com/').respond()
     httpBackend.flush()
   })
 
   it('should retry', function () {
-    $http.get('http://MOCKURL.com/model1')
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond()
+    $http.get('http://MOCKURL.com/')
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond()
     httpBackend.flush()
   })
 
-  it('shouldns retry avetu max retreizes', function(){
-    $http.get('http://MOCKURL.com/model1')
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
-    httpBackend.expectGET('http://MOCKURL.com/model1').respond(0)
+  it('should\'nt retry after max retries', function(){
+    $http.get('http://MOCKURL.com/')
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
     httpBackend.flush()
+  })
 
-
-
+  it ('should retry after delay', function(){
+    $http.get('http://MOCKURL.com/')
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.flush()
+    /** Timeout flush simulates the service's timeout being resolved, thus resetting the max_tries counter */
+    $timeout.flush()
+    $http.get('http://MOCKURL.com/')
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.expectGET('http://MOCKURL.com/').respond(0)
+    httpBackend.flush()
   })
 })
