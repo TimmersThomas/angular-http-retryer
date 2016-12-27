@@ -65,7 +65,7 @@
 
         responseError: function (rejection) {
           retryer.checkPending()
-          if (rejection.status <= 0 && ++self.retries <= self.maxRetries) {
+          if (rejection.status >= 500 && ++self.retries <= self.maxRetries) {
             retryer.emit()
             var delay = 1000 * self.retries
             var $http = $injector.get('$http')
